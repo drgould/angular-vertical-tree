@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Angular Vertical Tree</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular-sanitize.min.js"></script>
+    <script src="../dist/angularVerticalTree.js"></script>
+    <script src="js/script.js"></script>
+</head>
+<body ng-controller="MainCtrl">
+
+    <vertical-tree tree-items="items" id="vertical-tree-demo">
+        <vertical-tree-breadcrumb>
+            <div class="breadcrumb-arrow"></div>
+            <div class="breadcrumb-arrow"></div>
+            <i class="fa fa-folder-open-o"></i>
+            {{ breadcrumb.label }}
+        </vertical-tree-breadcrumb>
+        <vertical-tree-leaf>
+            <i class="fa fa-folder-o" ng-show="leaf.children.length > 0"></i>
+            <i class="fa fa-file-o" ng-hide="leaf.children.length > 0"></i>
+            {{ leaf.label }}
+        </vertical-tree-leaf>
+    </vertical-tree>
+
+    <div>
+        Last opened folder:
+        <span ng-show="folder.label" ng-bind="folder.label"></span>
+        <span class="text-danger" ng-hide="folder.label">Open a folder</span>
+    </div>
+    <div>
+        Last selected item:
+        <span ng-show="item.label" ng-bind="item.label"></span>
+        <span class="text-danger" ng-hide="item.label">Select an item</span>
+    </div>
+
+
+</body>
+</html>

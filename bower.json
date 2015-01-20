@@ -1,0 +1,27 @@
+{
+  "name": "angular-vertical-tree",
+  "version": "0.1.0",
+  "authors": [
+    "Derek Gould <derekrossgould@gmail.com>"
+  ],
+  "description": "A vertical tree directive",
+  "main": "angular-vertical-tree.js",
+  "license": "MIT",
+  "homepage": "http://github.com/drgould/angular-vertical-tree",
+  "ignore": [
+    "**/.*",
+    "test",
+    "src",
+    "demo"
+  ],
+  "dependencies": {
+    "angular": "~1.2.28",
+    "angular-sanitize": "~1.2.28",
+    "ng-include-scope": "*"
+  },
+  "devDependencies": {
+    "bootstrap": "~3.3.1",
+    "angular-mocks": "1.2.28",
+    "font-awesome": "~4.2.0"
+  }
+}

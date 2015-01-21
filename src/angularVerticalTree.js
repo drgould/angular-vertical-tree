@@ -66,15 +66,7 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             }
         };
     } )
-    .factory( 'vTreeService', function() {
-        return {};
-    } )
-    .filter( 'isVTreeLeaf', function( vTreeService ) {
-        return function( item ) {
-            return vTreeService.isLeaf( item );
-        };
-    } )
-    .controller( 'vTreeCtrl', function( $scope, $timeout, vTreeService ) {
+    .controller( 'vTreeCtrl', function( $scope, $timeout ) {
 
         var defaultOpts = {
             root : 'Root',
@@ -137,9 +129,9 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             },
 
             leafClickHandler : function( item ) {
-                if( vTreeService.isFolder( item ) ) {
+                if( $scope.vTreeCtrl.opts.isFolder( item ) ) {
                     onOpen( item );
-                } else if( vTreeService.isLeaf( item ) ) {
+                } else if( $scope.vTreeCtrl.opts.isLeaf( item ) ) {
                     onSelect( item );
                 }
             },
@@ -153,17 +145,6 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
                 }
             }
         };
-
-        Object.defineProperty( vTreeService, 'isFolder', {
-            'get' : function() {
-                return $scope.vTreeCtrl.opts.isFolder;
-            }
-        } );
-        Object.defineProperty( vTreeService, 'isLeaf', {
-            'get' : function() {
-                return $scope.vTreeCtrl.opts.isLeaf;
-            }
-        } );
 
         $timeout( function() {
             var root = {};

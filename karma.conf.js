@@ -11,13 +11,23 @@ module.exports = function ( karma ) {
         frameworks: [ 'jasmine' ],
         plugins: [
             'karma-jasmine',
+            'karma-coverage',
             'karma-phantomjs-launcher'
         ],
 
         /**
          * How to report, by default.
          */
-        reporters: 'dots',
+        reporters: ['dots', 'coverage'],
+
+        preprocessors: {
+            'src/!(*.spec)+(.js)': ['coverage']
+        },
+
+        coverageReporter: {
+            type : 'html',
+            dir : 'reporters/coverage/'
+        },
 
         /**
          * On which port should the browser connect, on which port is the test runner
@@ -30,7 +40,8 @@ module.exports = function ( karma ) {
         /**
          * Disable file watching by default.
          */
-        autoWatch: false,
+        autoWatch : false,
+        singleRun : true,
 
         /**
          * The list of browsers to launch to test on. This includes only "Firefox" by

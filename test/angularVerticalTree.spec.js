@@ -153,11 +153,11 @@ describe( 'Vertical Tree Controller:', function () {
         } );
 
         it( 'should save all the breadcrumbs', function () {
-            expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 4 );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 0 ] ).toEqual( breadcrumbs[ 0 ] );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 1 ] );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 2 ] );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 3 ] ).toEqual( breadcrumbs[ 3 ] );
+            expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 5 );
+            expect( $scope.vTreeCtrl.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 0 ] );
+            expect( $scope.vTreeCtrl.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 1 ] );
+            expect( $scope.vTreeCtrl.breadcrumbs[ 3 ] ).toEqual( breadcrumbs[ 2 ] );
+            expect( $scope.vTreeCtrl.breadcrumbs[ 4 ] ).toEqual( breadcrumbs[ 3 ] );
         } );
 
         it( 'should set the correct items', function () {
@@ -172,9 +172,9 @@ describe( 'Vertical Tree Controller:', function () {
             } );
 
             it( 'should have the correct breadcrumbs', function () {
-                expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 2 );
-                expect( $scope.vTreeCtrl.breadcrumbs[ 0 ] ).toEqual( breadcrumbs[ 0 ] );
-                expect( $scope.vTreeCtrl.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 1 ] );
+                expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 3 );
+                expect( $scope.vTreeCtrl.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 0 ] );
+                expect( $scope.vTreeCtrl.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 1 ] );
             } );
 
             it( 'should set the correct items', function () {

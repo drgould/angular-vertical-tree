@@ -4,7 +4,7 @@ var gulp = require( 'gulp' ),
     plumber = require( 'gulp-plumber' ),
     concat = require( 'gulp-concat' ),
     cache = require( 'gulp-cache' ),
-    karma = require( 'gulp-karma' )( { configFile: 'karma.conf.js' } ),
+    karma = require( 'karma' ).server,
     jshint = require( 'gulp-jshint' ),
     jshintStylish = require( 'jshint-stylish' ),
     livereload = require( 'gulp-livereload' ),
@@ -14,6 +14,7 @@ var gulp = require( 'gulp' ),
     ngAnnotate = require( 'gulp-ng-annotate' ),
     runSequence = require( 'run-sequence' ),
     fs = require( 'fs' ),
+    shell = require( 'shelljs' ),
     config = require( './build.config.js' );
 
 var handleError = function (err) {
@@ -51,12 +52,25 @@ gulp.task( 'hint', function () {
 } );
 
 gulp.task( 'karma', function () {
-    return karma.once();
+    return karma.start( {
+        configFile : config.karmaConf
+    } );
 } );
 
 gulp.task( 'karma-watch', function () {
-    return karma.start( { autoWatch: true } );
+    return karma.start( {
+        configFile : config.karmaConf,
+        autoWatch : true,
+        singleRun : false
+    });
 } );
+
+gulp.task('coverage', function () {
+    if(shell.exec('open reporters/coverage/html/index.html').code !== 0) {
+        console.error('Could not execute jekyll build');
+        shell.exit(1);
+    }
+});
 
 gulp.task( 'compile-template', function() {
     return gulp.src( config.templateFiles )

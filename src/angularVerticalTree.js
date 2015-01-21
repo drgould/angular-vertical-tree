@@ -69,6 +69,8 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
     .controller( 'vTreeCtrl', function( $scope, $timeout ) {
 
         var defaultOpts = {
+            root : 'Root',
+            label : 'label',
             children : 'children',
             classes: {
                 container: 'panel panel-default',
@@ -133,6 +135,12 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
         };
 
         $timeout( function() {
+            var breadcrumb = {};
+            breadcrumb[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
+            breadcrumb[ $scope.vTreeCtrl.opts.children ] = $scope.vTreeCtrl.items;
+
+            $scope.vTreeCtrl.breadcrumbs.push( breadcrumb );
+
             $scope.vTreeCtrl.currentItems = $scope.vTreeCtrl.items;
         } );
 

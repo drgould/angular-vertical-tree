@@ -36,5 +36,6 @@ module.exports = {
     buildDir : buildDir,
     jsFilename : jsFilename,
     jsFilenameMin : jsFilenameMin,
-    templateJsFilename : templateJsFilename
+    templateJsFilename : templateJsFilename,
+    karmaConf : __dirname + '/karma.conf.js'
 };

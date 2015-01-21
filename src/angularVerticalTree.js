@@ -136,8 +136,18 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
 
         $timeout( function() {
             var breadcrumb = {};
-            breadcrumb[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
-            breadcrumb[ $scope.vTreeCtrl.opts.children ] = $scope.vTreeCtrl.items;
+
+            if( angular.isObject( $scope.vTreeCtrl.opts.root ) ) {
+                breadcrumb = angular.copy( $scope.vTreeCtrl.opts.root );
+            } else {
+                breadcrumb[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
+            }
+
+            Object.defineProperty( breadcrumb, $scope.vTreeCtrl.opts.children, {
+                'get' : function() {
+                    return $scope.vTreeCtrl.items;
+                }
+            } );
 
             $scope.vTreeCtrl.breadcrumbs.push( breadcrumb );
 

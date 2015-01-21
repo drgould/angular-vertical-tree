@@ -52,6 +52,9 @@ describe( 'Vertical Tree Controller:', function () {
         $scope.vTreeExpr = {
             items : angular.toJson( items ),
             opts : angular.toJson( {
+                root : {
+                    label : 'New Root'
+                },
                 classes : {
                     container : 'cont'
                 }
@@ -86,9 +89,22 @@ describe( 'Vertical Tree Controller:', function () {
         expect( $scope.vTreeCtrl.items ).toEqual( items );
     } );
 
-    it( 'should set the current items to the generated list of items', function () {
-        $timeout.flush();
-        expect( $scope.vTreeCtrl.currentItems ).toEqual( items );
+    describe( '', function () {
+
+        beforeEach( function () {
+            $timeout.flush();
+        } );
+
+        it( 'should set the current items to the generated list of items', function () {
+            expect( $scope.vTreeCtrl.currentItems ).toEqual( items );
+        } );
+
+        it( 'should set the root correctly', function () {
+            expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 1 );
+            expect( $scope.vTreeCtrl.breadcrumbs[ 0 ].label ).toEqual( 'New Root' );
+            expect( $scope.vTreeCtrl.breadcrumbs[ 0 ].children ).toEqual( items );
+        } );
+
     } );
 
     describe( 'when a folder is opened', function () {

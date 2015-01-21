@@ -66,7 +66,15 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             }
         };
     }] )
-    .controller( 'vTreeCtrl', ["$scope", "$timeout", function( $scope, $timeout ) {
+    .factory( 'vTreeService', function() {
+        return {};
+    } )
+    .filter( 'isVTreeLeaf', ["vTreeService", function( vTreeService ) {
+        return function( item ) {
+            return vTreeService.isLeaf( item );
+        };
+    }] )
+    .controller( 'vTreeCtrl', ["$scope", "$timeout", "vTreeService", function( $scope, $timeout, vTreeService ) {
 
         var defaultOpts = {
             root : 'Root',
@@ -78,6 +86,10 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
                 breadcrumb: 'panel-title',
                 branch: 'list-group',
                 leaf: 'list-group-item'
+            },
+            isLeaf : function() { return true; },
+            isFolder : function( item ) {
+                return item[ $scope.vTreeCtrl.opts.children ] && item[ $scope.vTreeCtrl.opts.children ].length > 0;
             }
         };
 
@@ -114,12 +126,20 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
                 return $scope.$eval( $scope.vTreeExpr.items ) || [];
             },
             currentItems : [],
+            get leaves() {
+                var leaves = [];
+                angular.forEach( $scope.vTreeCtrl.currentItems, function( item ) {
+                    if( $scope.vTreeCtrl.opts.isLeaf( item ) ) {
+                        leaves.push( item );
+                    }
+                } );
+                return leaves;
+            },
 
             leafClickHandler : function( item ) {
-                var children = item[ $scope.vTreeCtrl.opts.children ];
-                if( children && children.length > 0 ) {
+                if( vTreeService.isFolder( item ) ) {
                     onOpen( item );
-                } else {
+                } else if( vTreeService.isLeaf( item ) ) {
                     onSelect( item );
                 }
             },
@@ -134,26 +154,37 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             }
         };
 
+        Object.defineProperty( vTreeService, 'isFolder', {
+            'get' : function() {
+                return $scope.vTreeCtrl.opts.isFolder;
+            }
+        } );
+        Object.defineProperty( vTreeService, 'isLeaf', {
+            'get' : function() {
+                return $scope.vTreeCtrl.opts.isLeaf;
+            }
+        } );
+
         $timeout( function() {
-            var breadcrumb = {};
+            var root = {};
 
             if( angular.isObject( $scope.vTreeCtrl.opts.root ) ) {
-                breadcrumb = angular.copy( $scope.vTreeCtrl.opts.root );
+                root = angular.copy( $scope.vTreeCtrl.opts.root );
             } else {
-                breadcrumb[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
+                root[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
             }
 
-            Object.defineProperty( breadcrumb, $scope.vTreeCtrl.opts.children, {
+            Object.defineProperty( root, $scope.vTreeCtrl.opts.children, {
                 'get' : function() {
                     return $scope.vTreeCtrl.items;
                 }
             } );
 
-            $scope.vTreeCtrl.breadcrumbs.push( breadcrumb );
+            $scope.vTreeCtrl.breadcrumbs.push( root );
 
             $scope.vTreeCtrl.currentItems = $scope.vTreeCtrl.items;
         } );
 
     }] );
 
-angular.module("drg.angularVerticalTree").run(["$templateCache", function($templateCache) {$templateCache.put("drg/angularVerticalTree.tpl.html","<div class=\"v-tree-container\" ng-class=\"vTreeCtrl.opts.classes.container\">\n    <div class=\"v-tree-breadcrumbs\" ng-class=\"vTreeCtrl.opts.classes.breadcrumbs\">\n        <div class=\"v-tree-breadcrumb\" ng-class=\"vTreeCtrl.opts.classes.breadcrumb\" ng-repeat=\"breadcrumb in vTreeCtrl.breadcrumbs track by $index\">\n            <a href=\"javascript:;\" ng-click=\"vTreeCtrl.breadcrumbClickHandler(breadcrumb)\" ng-include=\"vTreeTemplates.breadcrumb\"></a>\n        </div>\n    </div>\n    <ul class=\"v-tree-branch\" ng-class=\"vTreeCtrl.opts.classes.branch\">\n        <li class=\"v-tree-leaf\" ng-class=\"vTreeCtrl.opts.classes.leaf\" ng-repeat=\"leaf in vTreeCtrl.currentItems\">\n            <a href=\"javascript:;\" ng-click=\"vTreeCtrl.leafClickHandler(leaf)\" ng-include=\"vTreeTemplates.leaf\"></a>\n        </li>\n    </ul>\n</div>\n");}]);
+angular.module("drg.angularVerticalTree").run(["$templateCache", function($templateCache) {$templateCache.put("drg/angularVerticalTree.tpl.html","<div class=\"v-tree-container\" ng-class=\"vTreeCtrl.opts.classes.container\">\n    <div class=\"v-tree-breadcrumbs\" ng-class=\"vTreeCtrl.opts.classes.breadcrumbs\">\n        <div class=\"v-tree-breadcrumb\" ng-class=\"vTreeCtrl.opts.classes.breadcrumb\" ng-repeat=\"breadcrumb in vTreeCtrl.breadcrumbs\">\n            <a href=\"javascript:;\" ng-click=\"vTreeCtrl.breadcrumbClickHandler(breadcrumb)\" ng-include=\"vTreeTemplates.breadcrumb\"></a>\n        </div>\n    </div>\n    <ul class=\"v-tree-branch\" ng-class=\"vTreeCtrl.opts.classes.branch\">\n        <li class=\"v-tree-leaf\" ng-class=\"vTreeCtrl.opts.classes.leaf\" ng-repeat=\"leaf in vTreeCtrl.leaves\">\n            <a href=\"javascript:;\" ng-click=\"vTreeCtrl.leafClickHandler(leaf)\" ng-include=\"vTreeTemplates.leaf\"></a>\n        </li>\n    </ul>\n</div>\n");}]);

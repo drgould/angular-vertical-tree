@@ -66,7 +66,15 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             }
         };
     } )
-    .controller( 'vTreeCtrl', function( $scope, $timeout ) {
+    .factory( 'vTreeService', function() {
+        return {};
+    } )
+    .filter( 'isVTreeLeaf', function( vTreeService ) {
+        return function( item ) {
+            return vTreeService.isLeaf( item );
+        };
+    } )
+    .controller( 'vTreeCtrl', function( $scope, $timeout, vTreeService ) {
 
         var defaultOpts = {
             root : 'Root',
@@ -78,6 +86,10 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
                 breadcrumb: 'panel-title',
                 branch: 'list-group',
                 leaf: 'list-group-item'
+            },
+            isLeaf : function() { return true; },
+            isFolder : function( item ) {
+                return item[ $scope.vTreeCtrl.opts.children ] && item[ $scope.vTreeCtrl.opts.children ].length > 0;
             }
         };
 
@@ -114,12 +126,20 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
                 return $scope.$eval( $scope.vTreeExpr.items ) || [];
             },
             currentItems : [],
+            get leaves() {
+                var leaves = [];
+                angular.forEach( $scope.vTreeCtrl.currentItems, function( item ) {
+                    if( $scope.vTreeCtrl.opts.isLeaf( item ) ) {
+                        leaves.push( item );
+                    }
+                } );
+                return leaves;
+            },
 
             leafClickHandler : function( item ) {
-                var children = item[ $scope.vTreeCtrl.opts.children ];
-                if( children && children.length > 0 ) {
+                if( vTreeService.isFolder( item ) ) {
                     onOpen( item );
-                } else {
+                } else if( vTreeService.isLeaf( item ) ) {
                     onSelect( item );
                 }
             },
@@ -134,22 +154,33 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             }
         };
 
+        Object.defineProperty( vTreeService, 'isFolder', {
+            'get' : function() {
+                return $scope.vTreeCtrl.opts.isFolder;
+            }
+        } );
+        Object.defineProperty( vTreeService, 'isLeaf', {
+            'get' : function() {
+                return $scope.vTreeCtrl.opts.isLeaf;
+            }
+        } );
+
         $timeout( function() {
-            var breadcrumb = {};
+            var root = {};
 
             if( angular.isObject( $scope.vTreeCtrl.opts.root ) ) {
-                breadcrumb = angular.copy( $scope.vTreeCtrl.opts.root );
+                root = angular.copy( $scope.vTreeCtrl.opts.root );
             } else {
-                breadcrumb[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
+                root[ $scope.vTreeCtrl.opts.label ] = $scope.vTreeCtrl.opts.root;
             }
 
-            Object.defineProperty( breadcrumb, $scope.vTreeCtrl.opts.children, {
+            Object.defineProperty( root, $scope.vTreeCtrl.opts.children, {
                 'get' : function() {
                     return $scope.vTreeCtrl.items;
                 }
             } );
 
-            $scope.vTreeCtrl.breadcrumbs.push( breadcrumb );
+            $scope.vTreeCtrl.breadcrumbs.push( root );
 
             $scope.vTreeCtrl.currentItems = $scope.vTreeCtrl.items;
         } );

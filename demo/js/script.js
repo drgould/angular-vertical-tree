@@ -26,6 +26,12 @@ angular.module( 'app', [ 'drg.angularVerticalTree' ] )
             return branches;
         }
 
+        $scope.vTreeOpts = {
+            isLeaf : function( item ) {
+                return item.label.substr( -2 ) != '-5';
+            }
+        };
+
         $scope.items = generateTree( 6, '' );
         $scope.item = {};
         $scope.folder = {};

@@ -1,11 +1,11 @@
 <div class="v-tree-container" ng-class="vTreeCtrl.opts.classes.container">
     <div class="v-tree-breadcrumbs" ng-class="vTreeCtrl.opts.classes.breadcrumbs">
-        <div class="v-tree-breadcrumb" ng-class="vTreeCtrl.opts.classes.breadcrumb" ng-repeat="breadcrumb in vTreeCtrl.breadcrumbs track by $index">
+        <div class="v-tree-breadcrumb" ng-class="vTreeCtrl.opts.classes.breadcrumb" ng-repeat="breadcrumb in vTreeCtrl.breadcrumbs">
             <a href="javascript:;" ng-click="vTreeCtrl.breadcrumbClickHandler(breadcrumb)" ng-include="vTreeTemplates.breadcrumb"></a>
         </div>
     </div>
     <ul class="v-tree-branch" ng-class="vTreeCtrl.opts.classes.branch">
-        <li class="v-tree-leaf" ng-class="vTreeCtrl.opts.classes.leaf" ng-repeat="leaf in vTreeCtrl.currentItems">
+        <li class="v-tree-leaf" ng-class="vTreeCtrl.opts.classes.leaf" ng-repeat="leaf in vTreeCtrl.leaves">
             <a href="javascript:;" ng-click="vTreeCtrl.leafClickHandler(leaf)" ng-include="vTreeTemplates.leaf"></a>
         </li>
     </ul>

@@ -96,9 +96,9 @@ gulp.task( 'concat-js', function() {
 } );
 
 gulp.task( 'uglify-js', function () {
-    return gulp.src( config.buildFiles )
+    return gulp.src( [ config.distDir + config.jsFilename ] )
         .pipe( plumber( { errorHandler: handleError } ) )
-        .pipe( uglify( { mangle: false, compress: { drop_console: true } } ) )
+        .pipe( uglify( { mangle: true, compress: { drop_console: true } } ) )
         .pipe( rename( config.jsFilenameMin ) )
         .pipe( gulp.dest( config.distDir ) );
 } );

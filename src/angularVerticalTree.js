@@ -54,8 +54,6 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
                                     breadcrumbs = container.children().eq( 0 ),
                                     branch = container.children().eq( 1 );
 
-                                console.log( 'calc(100% - ' + breadcrumbs.height() + 'px)' );
-
                                 branch.css( 'height', 'calc(100% - ' + breadcrumbs.height() + 'px)' );
                             } );
                         };

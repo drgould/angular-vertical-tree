@@ -92,7 +92,7 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             $scope.$emit( 'verticalTree.openFolder', folder );
 
             if( $scope.vTreeExpr.open ) {
-                $scope[ $scope.vTreeExpr.open ]( folder );
+                $scope.$eval( $scope.vTreeExpr.open )( folder );
             }
         }
 
@@ -100,7 +100,7 @@ angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
             $scope.$emit( 'verticalTree.selectItem', item );
 
             if( $scope.vTreeExpr.select ) {
-                $scope[ $scope.vTreeExpr.select ]( item );
+                $scope.$eval( $scope.vTreeExpr.select )( item );
             }
         }
 

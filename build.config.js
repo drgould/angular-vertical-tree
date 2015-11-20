@@ -15,10 +15,8 @@ module.exports = {
     ],
     depFiles : [
         'bower_components/jquery/dist/jquery.js',
-        'bower_components/bootstrap/dist/js/bootstrap.js',
         'bower_components/angular/angular.js',
-        'bower_components/angular-mocks/angular-mocks.js',
-        'bower_components/angular-sanitize/angular-sanitize.js'
+        'bower_components/angular-mocks/angular-mocks.js'
     ],
     testFiles : [
         'test/angularVerticalTree.spec.js'

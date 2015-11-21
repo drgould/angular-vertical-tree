@@ -1,4 +1,4 @@
-angular.module( 'drg.angularVerticalTree', [ 'ngSanitize' ] )
+angular.module( 'drg.angularVerticalTree', [] )
     .directive( 'verticalTree', ["$templateCache", "$timeout", function( $templateCache, $timeout ) {
         return {
             restrict : 'EA',

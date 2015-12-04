@@ -15,7 +15,7 @@ describe( 'Vertical Tree Controller:', function () {
         selectCallbackSpy,
         openSpy,
         openCallbackSpy,
-        renderSpy;
+        updateBranchHeightSpy;
 
     function generateTree( level, items ) {
         var leaves = [];
@@ -67,7 +67,7 @@ describe( 'Vertical Tree Controller:', function () {
         selectCallbackSpy = jasmine.createSpy( 'select callback' );
         openSpy = jasmine.createSpy( 'open' );
         openCallbackSpy = jasmine.createSpy( 'open callback' );
-        renderSpy = jasmine.createSpy( 'render' );
+        updateBranchHeightSpy = jasmine.createSpy( 'updateBranchHeight' );
 
         $controller( 'vTreeCtrl', { $scope : $scope } );
         $scope.$digest();
@@ -78,7 +78,7 @@ describe( 'Vertical Tree Controller:', function () {
         $rootScope.onOpen = openCallbackSpy;
         $rootScope.onSelect = selectCallbackSpy;
 
-        $scope.vTreeCtrl.render = renderSpy;
+        $scope.vTreeCtrl.updateBranchHeight = updateBranchHeightSpy;
     } );
 
     it( 'should set the container class', function () {
@@ -123,8 +123,8 @@ describe( 'Vertical Tree Controller:', function () {
             expect( $scope.vTreeCtrl.currentItems ).toEqual( items[ 2 ].children );
         } );
 
-        it( 'should re-render', function () {
-            expect( renderSpy ).toHaveBeenCalled();
+        it( 'should call updateBranchHeight', function () {
+            expect( updateBranchHeightSpy ).toHaveBeenCalled();
         } );
 
         it( 'should fire the open event', function () {
@@ -198,7 +198,7 @@ describe( 'Vertical Tree Controller:', function () {
             } );
 
             it( 'should fire onOpen', function () {
-                expect( renderSpy ).toHaveBeenCalled();
+                expect( updateBranchHeightSpy ).toHaveBeenCalled();
                 expect( openSpy ).toHaveBeenCalledWith( jasmine.any( Object ), items[ 2 ] );
                 expect( openCallbackSpy ).toHaveBeenCalledWith( items[ 2 ] );
             } );

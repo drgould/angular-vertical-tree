@@ -48,17 +48,21 @@ angular.module( 'drg.angularVerticalTree', [] )
                         } );
                     },
                     post : function( scope, elem, attrs ) {
-                        scope.vTreeCtrl.render = function() {
+                        function updateBranchHeight() {
                             $timeout( function() {
-                                var container = elem.children().eq( 0 ),
-                                    breadcrumbs = container.children().eq( 0 ),
-                                    branch = container.children().eq( 1 );
+                                var container = elem.children().eq( 0 );
+                                var breadcrumbs = container.find( '.v-tree-breadcrumb' );
+                                var breadcrumbsOuterHeight = 0;
+                                breadcrumbs.each( function() {
+                                    breadcrumbsOuterHeight += $( this ).outerHeight();
+                                } );
+                                var branch = container.find( '.v-tree-branch' );
 
-                                branch.css( 'height', 'calc(100% - ' + breadcrumbs.height() + 'px)' );
+                                branch.css( 'height', 'calc(100% - ' + breadcrumbsOuterHeight + 'px)' );
                             } );
-                        };
-
-
+                        }
+                        updateBranchHeight();
+                        scope.vTreeCtrl.updateBranchHeight = updateBranchHeight;
                     }
                 }
             }
@@ -72,8 +76,7 @@ angular.module( 'drg.angularVerticalTree', [] )
             children : 'children',
             classes: {
                 container: 'panel panel-default',
-                breadcrumbs: 'panel-heading',
-                breadcrumb: 'panel-title',
+                breadcrumb: 'panel-heading',
                 branch: 'list-group',
                 leaf: 'list-group-item'
             },
@@ -87,7 +90,7 @@ angular.module( 'drg.angularVerticalTree', [] )
             $scope.vTreeCtrl.breadcrumbs.push( folder );
             $scope.vTreeCtrl.currentItems = folder[ $scope.vTreeCtrl.opts.children ];
 
-            $scope.vTreeCtrl.render();
+            $scope.vTreeCtrl.updateBranchHeight();
 
             $scope.$emit( 'verticalTree.openFolder', folder );
 
@@ -112,7 +115,6 @@ angular.module( 'drg.angularVerticalTree', [] )
             breadcrumbs : [],
 
             get items() {
-
                 return $scope.$eval( $scope.vTreeExpr.items ) || [];
             },
             currentItems : [],

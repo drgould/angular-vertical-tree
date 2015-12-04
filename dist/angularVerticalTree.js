@@ -48,17 +48,21 @@ angular.module( 'drg.angularVerticalTree', [] )
                         } );
                     },
                     post : function( scope, elem, attrs ) {
-                        scope.vTreeCtrl.render = function() {
+                        function updateBranchHeight() {
                             $timeout( function() {
-                                var container = elem.children().eq( 0 ),
-                                    breadcrumbs = container.children().eq( 0 ),
-                                    branch = container.children().eq( 1 );
+                                var container = elem.children().eq( 0 );
+                                var breadcrumbs = container.find( '.v-tree-breadcrumb' );
+                                var breadcrumbsOuterHeight = 0;
+                                breadcrumbs.each( function() {
+                                    breadcrumbsOuterHeight += $( this ).outerHeight();
+                                } );
+                                var branch = container.find( '.v-tree-branch' );
 
-                                branch.css( 'height', 'calc(100% - ' + breadcrumbs.height() + 'px)' );
+                                branch.css( 'height', 'calc(100% - ' + breadcrumbsOuterHeight + 'px)' );
                             } );
-                        };
-
-
+                        }
+                        updateBranchHeight();
+                        scope.vTreeCtrl.updateBranchHeight = updateBranchHeight;
                     }
                 }
             }
@@ -72,8 +76,7 @@ angular.module( 'drg.angularVerticalTree', [] )
             children : 'children',
             classes: {
                 container: 'panel panel-default',
-                breadcrumbs: 'panel-heading',
-                breadcrumb: 'panel-title',
+                breadcrumb: 'panel-heading',
                 branch: 'list-group',
                 leaf: 'list-group-item'
             },
@@ -87,7 +90,7 @@ angular.module( 'drg.angularVerticalTree', [] )
             $scope.vTreeCtrl.breadcrumbs.push( folder );
             $scope.vTreeCtrl.currentItems = folder[ $scope.vTreeCtrl.opts.children ];
 
-            $scope.vTreeCtrl.render();
+            $scope.vTreeCtrl.updateBranchHeight();
 
             $scope.$emit( 'verticalTree.openFolder', folder );
 
@@ -112,7 +115,6 @@ angular.module( 'drg.angularVerticalTree', [] )
             breadcrumbs : [],
 
             get items() {
-
                 return $scope.$eval( $scope.vTreeExpr.items ) || [];
             },
             currentItems : [],
@@ -166,4 +168,4 @@ angular.module( 'drg.angularVerticalTree', [] )
 
     }] );
 
-angular.module("drg.angularVerticalTree").run(["$templateCache", function($templateCache) {$templateCache.put("drg/angularVerticalTree.tpl.html","<div class=\"v-tree-container\" ng-class=\"vTreeCtrl.opts.classes.container\">\n    <div class=\"v-tree-breadcrumbs\" ng-class=\"vTreeCtrl.opts.classes.breadcrumbs\">\n        <div class=\"v-tree-breadcrumb\" ng-class=\"vTreeCtrl.opts.classes.breadcrumb\" ng-repeat=\"breadcrumb in vTreeCtrl.breadcrumbs\">\n            <a href=\"javascript:;\" ng-click=\"vTreeCtrl.breadcrumbClickHandler(breadcrumb)\" ng-include=\"vTreeTemplates.breadcrumb\"></a>\n        </div>\n    </div>\n    <ul class=\"v-tree-branch\" ng-class=\"vTreeCtrl.opts.classes.branch\">\n        <li class=\"v-tree-leaf\" ng-class=\"vTreeCtrl.opts.classes.leaf\" ng-repeat=\"leaf in vTreeCtrl.leaves\">\n            <a href=\"javascript:;\" ng-click=\"vTreeCtrl.leafClickHandler(leaf)\" ng-include=\"vTreeTemplates.leaf\"></a>\n        </li>\n    </ul>\n</div>\n");}]);
+angular.module("drg.angularVerticalTree").run(["$templateCache", function($templateCache) {$templateCache.put("drg/angularVerticalTree.tpl.html","<!-- .panel by default -->\n<div class=\"v-tree-container\" ng-class=\"vTreeCtrl.opts.classes.container\">\n\n    <!-- .panel-heading by default -->\n    <a class=\"v-tree-breadcrumb\"\n       href=\"javascript:;\"\n       ng-class=\"vTreeCtrl.opts.classes.breadcrumb\"\n       ng-click=\"vTreeCtrl.breadcrumbClickHandler(breadcrumb)\"\n       ng-include=\"vTreeTemplates.breadcrumb\"\n       ng-repeat=\"breadcrumb in vTreeCtrl.breadcrumbs\"\n       style=\"display: block;\">\n    </a>\n\n    <!-- .list-group by default -->\n    <div class=\"v-tree-branch\" ng-class=\"vTreeCtrl.opts.classes.branch\">\n        <!-- .list-group-item by default -->\n        <a class=\"v-tree-leaf\"\n           href=\"javascript:;\"\n           ng-class=\"vTreeCtrl.opts.classes.leaf\"\n           ng-click=\"vTreeCtrl.leafClickHandler(leaf)\"\n           ng-include=\"vTreeTemplates.leaf\"\n           ng-repeat=\"leaf in vTreeCtrl.leaves\">\n        </a>\n    </div>\n\n</div>\n");}]);

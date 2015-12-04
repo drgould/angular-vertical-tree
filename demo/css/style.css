@@ -4,6 +4,11 @@
     overflow: hidden;
 }
 
+#vertical-tree-demo a:hover,
+#vertical-tree-demo a:focus {
+    text-decoration: none;
+}
+
 #vertical-tree-demo .list-group {
     overflow: auto;
 }

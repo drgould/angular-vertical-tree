@@ -1,6 +1,6 @@
 {
   "name": "angular-vertical-tree",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "A vertical tree directive",
   "main": "angular-vertical-tree.js",
   "scripts": {

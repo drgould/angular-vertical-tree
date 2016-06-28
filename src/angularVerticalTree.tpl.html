@@ -1,25 +1,25 @@
 <!-- .panel by default -->
-<div class="v-tree-container" ng-class="vTreeCtrl.opts.classes.container">
+<div class="v-tree-container" ng-class="opts.classes.container">
 
     <!-- .panel-heading by default -->
     <a class="v-tree-breadcrumb"
        href="javascript:;"
-       ng-class="vTreeCtrl.opts.classes.breadcrumb"
-       ng-click="vTreeCtrl.breadcrumbClickHandler(breadcrumb)"
-       ng-include="vTreeTemplates.breadcrumb"
-       ng-repeat="breadcrumb in vTreeCtrl.breadcrumbs"
+       ng-class="opts.classes.breadcrumb"
+       ng-click="breadcrumbClickHandler(breadcrumb)"
+       ng-include="templates.breadcrumb"
+       ng-repeat="breadcrumb in breadcrumbs"
        style="display: block;">
     </a>
 
     <!-- .list-group by default -->
-    <div class="v-tree-branch" ng-class="vTreeCtrl.opts.classes.branch">
+    <div class="v-tree-branch" ng-class="opts.classes.branch">
         <!-- .list-group-item by default -->
         <a class="v-tree-leaf"
            href="javascript:;"
-           ng-class="vTreeCtrl.opts.classes.leaf"
-           ng-click="vTreeCtrl.leafClickHandler(leaf)"
-           ng-include="vTreeTemplates.leaf"
-           ng-repeat="leaf in vTreeCtrl.leaves">
+           ng-class="opts.classes.leaf"
+           ng-click="leafClickHandler(leaf)"
+           ng-include="templates.leaf"
+           ng-repeat="leaf in leaves">
         </a>
     </div>
 

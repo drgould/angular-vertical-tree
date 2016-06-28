@@ -45,22 +45,14 @@ describe( 'Vertical Tree Controller:', function () {
     beforeEach( function () {
         items = generateTree( 5, 6 );
 
-        $scope.vTreeTemplates = {
-            breadcrumbs : '',
-            leaf : ''
-        };
-        $scope.vTreeExpr = {
-            items : angular.toJson( items ),
-            opts : angular.toJson( {
-                root : {
-                    label : 'New Root'
-                },
-                classes : {
-                    container : 'cont'
-                }
-            } ),
-            open : 'onOpen',
-            select : 'onSelect'
+        $scope.items = items;
+        $scope.treeOpts = {
+            root : {
+                label : 'New Root'
+            },
+            classes : {
+                container : 'cont'
+            }
         };
 
         selectSpy = jasmine.createSpy( 'select' );
@@ -70,39 +62,34 @@ describe( 'Vertical Tree Controller:', function () {
         updateBranchHeightSpy = jasmine.createSpy( 'updateBranchHeight' );
 
         $controller( 'vTreeCtrl', { $scope : $scope } );
-        $scope.$digest();
 
         $rootScope.$on( 'verticalTree.openFolder', openSpy );
         $rootScope.$on( 'verticalTree.selectItem', selectSpy );
 
-        $rootScope.onOpen = openCallbackSpy;
-        $rootScope.onSelect = selectCallbackSpy;
+        $scope.open = openCallbackSpy;
+        $scope.select = selectCallbackSpy;
 
-        $scope.vTreeCtrl.updateBranchHeight = updateBranchHeightSpy;
+        $scope.updateBranchHeight = updateBranchHeightSpy;
     } );
 
     it( 'should set the container class', function () {
-        expect( $scope.vTreeCtrl.opts.classes.container ).toEqual( 'cont' );
+        expect( $scope.opts.classes.container ).toEqual( 'cont' );
     } );
 
     it( 'should have the items', function () {
-        expect( $scope.vTreeCtrl.items ).toEqual( items );
+        expect( $scope.items ).toEqual( items );
     } );
 
     describe( '', function () {
 
-        beforeEach( function () {
-            $timeout.flush();
-        } );
-
         it( 'should set the current items to the generated list of items', function () {
-            expect( $scope.vTreeCtrl.currentItems ).toEqual( items );
+            expect( $scope.leaves ).toEqual( items );
         } );
 
         it( 'should set the root correctly', function () {
-            expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 1 );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 0 ].label ).toEqual( 'New Root' );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 0 ].children ).toEqual( items );
+            expect( $scope.breadcrumbs.length ).toEqual( 1 );
+            expect( $scope.breadcrumbs[ 0 ].label ).toEqual( 'New Root' );
+            expect( $scope.breadcrumbs[ 0 ].children ).toEqual( items );
         } );
 
     } );
@@ -110,17 +97,16 @@ describe( 'Vertical Tree Controller:', function () {
     describe( 'when a folder is opened', function () {
 
         beforeEach( function () {
-            $scope.vTreeCtrl.leafClickHandler( items[2] );
-            $scope.$digest();
+            $scope.leafClickHandler( items[2] );
         } );
 
         it( 'should add the item to the breadcrumbs', function () {
-            expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 1 );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 0 ] ).toEqual( items[ 2 ] );
+            expect( $scope.breadcrumbs.length ).toEqual( 2 );
+            expect( $scope.breadcrumbs[ 1 ] ).toEqual( items[ 2 ] );
         } );
 
         it( 'should set the current items to the children of the opened folder', function () {
-            expect( $scope.vTreeCtrl.currentItems ).toEqual( items[ 2 ].children );
+            expect( $scope.leaves ).toEqual( items[ 2 ].children );
         } );
 
         it( 'should call updateBranchHeight', function () {
@@ -132,7 +118,7 @@ describe( 'Vertical Tree Controller:', function () {
         } );
 
         it( 'should call the open callback', function () {
-            expect( openCallbackSpy ).toHaveBeenCalledWith( items[ 2 ] );
+            expect( openCallbackSpy ).toHaveBeenCalledWith( { folder : items[ 2 ] } );
         } );
 
     } );
@@ -140,8 +126,7 @@ describe( 'Vertical Tree Controller:', function () {
     describe( 'when an item is clicked', function () {
 
         beforeEach( function () {
-            $scope.vTreeCtrl.leafClickHandler( items[ 5 ] );
-            $scope.$digest();
+            $scope.leafClickHandler( items[ 5 ] );
         } );
 
         it( 'should fire the select event', function () {
@@ -149,7 +134,7 @@ describe( 'Vertical Tree Controller:', function () {
         } );
 
         it( 'should call the select callback', function () {
-            expect( selectCallbackSpy ).toHaveBeenCalledWith( items[ 5 ] );
+            expect( selectCallbackSpy ).toHaveBeenCalledWith( { item : items[ 5 ] } );
         } );
 
     } );
@@ -159,48 +144,46 @@ describe( 'Vertical Tree Controller:', function () {
         var breadcrumbs = [];
 
         beforeEach( function () {
-            $timeout.flush();
-
             for( var i = 0; i < 4; i++ ) {
-                breadcrumbs.push( $scope.vTreeCtrl.currentItems[ 2 ] );
-                $scope.vTreeCtrl.leafClickHandler( $scope.vTreeCtrl.currentItems[ 2 ] );
+                breadcrumbs.push( $scope.leaves[ 2 ] );
+                $scope.leafClickHandler( $scope.leaves[ 2 ] );
                 $scope.$digest();
             }
         } );
 
         it( 'should save all the breadcrumbs', function () {
-            expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 5 );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 0 ] );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 1 ] );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 3 ] ).toEqual( breadcrumbs[ 2 ] );
-            expect( $scope.vTreeCtrl.breadcrumbs[ 4 ] ).toEqual( breadcrumbs[ 3 ] );
+            expect( $scope.breadcrumbs.length ).toEqual( 5 );
+            expect( $scope.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 0 ] );
+            expect( $scope.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 1 ] );
+            expect( $scope.breadcrumbs[ 3 ] ).toEqual( breadcrumbs[ 2 ] );
+            expect( $scope.breadcrumbs[ 4 ] ).toEqual( breadcrumbs[ 3 ] );
         } );
 
         it( 'should set the correct items', function () {
-            expect( $scope.vTreeCtrl.currentItems ).toEqual( breadcrumbs[ 3 ].children );
+            expect( $scope.leaves ).toEqual( breadcrumbs[ 3 ].children );
         } );
 
         describe( 'then skipping back up', function () {
 
             beforeEach( function () {
-                $scope.vTreeCtrl.breadcrumbClickHandler( breadcrumbs[ 1 ] );
+                $scope.breadcrumbClickHandler( breadcrumbs[ 1 ] );
                 $scope.$digest();
             } );
 
             it( 'should have the correct breadcrumbs', function () {
-                expect( $scope.vTreeCtrl.breadcrumbs.length ).toEqual( 3 );
-                expect( $scope.vTreeCtrl.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 0 ] );
-                expect( $scope.vTreeCtrl.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 1 ] );
+                expect( $scope.breadcrumbs.length ).toEqual( 3 );
+                expect( $scope.breadcrumbs[ 1 ] ).toEqual( breadcrumbs[ 0 ] );
+                expect( $scope.breadcrumbs[ 2 ] ).toEqual( breadcrumbs[ 1 ] );
             } );
 
             it( 'should set the correct items', function () {
-                expect( $scope.vTreeCtrl.currentItems ).toEqual( breadcrumbs[ 1 ].children );
+                expect( $scope.leaves ).toEqual( breadcrumbs[ 1 ].children );
             } );
 
             it( 'should fire onOpen', function () {
                 expect( updateBranchHeightSpy ).toHaveBeenCalled();
                 expect( openSpy ).toHaveBeenCalledWith( jasmine.any( Object ), items[ 2 ] );
-                expect( openCallbackSpy ).toHaveBeenCalledWith( items[ 2 ] );
+                expect( openCallbackSpy ).toHaveBeenCalledWith( { folder : items[ 2 ] } );
             } );
 
         } );

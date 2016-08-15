@@ -21,6 +21,7 @@
            ng-include="templates.leaf"
            ng-repeat="leaf in leaves">
         </a>
+        <p class="v-tree-empty" ng-if="!leaves || !leaves.length" ng-bind="opts.emptyMessage"></p>
     </div>
 
 </div>

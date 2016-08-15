@@ -92,6 +92,7 @@ angular.module( 'drg.angularVerticalTree', [] )
                 branch : 'list-group',
                 leaf : 'list-group-item'
             },
+            emptyMessage : '',
             isLeaf : function() {
                 return true;
             },

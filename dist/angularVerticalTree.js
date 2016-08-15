@@ -92,6 +92,7 @@ angular.module( 'drg.angularVerticalTree', [] )
                 branch : 'list-group',
                 leaf : 'list-group-item'
             },
+            emptyMessage : '',
             isLeaf : function() {
                 return true;
             },
@@ -167,4 +168,4 @@ angular.module( 'drg.angularVerticalTree', [] )
 
     }] );
 
-angular.module("drg.angularVerticalTree").run(["$templateCache", function($templateCache) {$templateCache.put("drg/angularVerticalTree.tpl.html","<!-- .panel by default -->\n<div class=\"v-tree-container\" ng-class=\"opts.classes.container\">\n\n    <!-- .panel-heading by default -->\n    <a class=\"v-tree-breadcrumb\"\n       href=\"javascript:;\"\n       ng-class=\"opts.classes.breadcrumb\"\n       ng-click=\"breadcrumbClickHandler(breadcrumb)\"\n       ng-include=\"templates.breadcrumb\"\n       ng-repeat=\"breadcrumb in breadcrumbs\"\n       style=\"display: block;\">\n    </a>\n\n    <!-- .list-group by default -->\n    <div class=\"v-tree-branch\" ng-class=\"opts.classes.branch\">\n        <!-- .list-group-item by default -->\n        <a class=\"v-tree-leaf\"\n           href=\"javascript:;\"\n           ng-class=\"opts.classes.leaf\"\n           ng-click=\"leafClickHandler(leaf)\"\n           ng-include=\"templates.leaf\"\n           ng-repeat=\"leaf in leaves\">\n        </a>\n    </div>\n\n</div>\n");}]);
+angular.module("drg.angularVerticalTree").run(["$templateCache", function($templateCache) {$templateCache.put("drg/angularVerticalTree.tpl.html","<!-- .panel by default -->\n<div class=\"v-tree-container\" ng-class=\"opts.classes.container\">\n\n    <!-- .panel-heading by default -->\n    <a class=\"v-tree-breadcrumb\"\n       href=\"javascript:;\"\n       ng-class=\"opts.classes.breadcrumb\"\n       ng-click=\"breadcrumbClickHandler(breadcrumb)\"\n       ng-include=\"templates.breadcrumb\"\n       ng-repeat=\"breadcrumb in breadcrumbs\"\n       style=\"display: block;\">\n    </a>\n\n    <!-- .list-group by default -->\n    <div class=\"v-tree-branch\" ng-class=\"opts.classes.branch\">\n        <!-- .list-group-item by default -->\n        <a class=\"v-tree-leaf\"\n           href=\"javascript:;\"\n           ng-class=\"opts.classes.leaf\"\n           ng-click=\"leafClickHandler(leaf)\"\n           ng-include=\"templates.leaf\"\n           ng-repeat=\"leaf in leaves\">\n        </a>\n        <p class=\"v-tree-empty\" ng-if=\"!leaves || !leaves.length\" ng-bind=\"opts.emptyMessage\"></p>\n    </div>\n\n</div>\n");}]);

@@ -14,9 +14,9 @@ module.exports = {
         srcDir + templateFilename
     ],
     depFiles : [
-        'bower_components/jquery/dist/jquery.js',
-        'bower_components/angular/angular.js',
-        'bower_components/angular-mocks/angular-mocks.js'
+        'node_modules/jquery/dist/jquery.js',
+        'node_modules/angular/angular.js',
+        'node_modules/angular-mocks/angular-mocks.js'
     ],
     testFiles : [
         'test/angularVerticalTree.spec.js'

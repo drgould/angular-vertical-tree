@@ -6,16 +6,16 @@ describe( 'Vertical Tree Directive:', function () {
 
 describe( 'Vertical Tree Controller:', function () {
 
-    var $rootScope,
-        $scope,
-        $timeout,
-        $controller,
-        items,
-        selectSpy,
-        selectCallbackSpy,
-        openSpy,
-        openCallbackSpy,
-        updateBranchHeightSpy;
+    var $rootScope;
+    var $scope;
+    var $timeout;
+    var $controller;
+    var items;
+    var selectSpy;
+    var selectCallbackSpy;
+    var openSpy;
+    var openCallbackSpy;
+    var updateBranchHeightSpy;
 
     function generateTree( level, items ) {
         var leaves = [];
@@ -70,6 +70,8 @@ describe( 'Vertical Tree Controller:', function () {
         $scope.select = selectCallbackSpy;
 
         $scope.updateBranchHeight = updateBranchHeightSpy;
+
+        $scope.$digest();
     } );
 
     it( 'should set the container class', function () {
@@ -166,7 +168,7 @@ describe( 'Vertical Tree Controller:', function () {
         describe( 'then skipping back up', function () {
 
             beforeEach( function () {
-                $scope.breadcrumbClickHandler( breadcrumbs[ 1 ] );
+                $scope.breadcrumbClickHandler( breadcrumbs[ 1 ], 1 );
                 $scope.$digest();
             } );
 

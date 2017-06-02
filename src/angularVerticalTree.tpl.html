@@ -5,9 +5,9 @@
     <a class="v-tree-breadcrumb"
        href="javascript:;"
        ng-class="opts.classes.breadcrumb"
-       ng-click="breadcrumbClickHandler(breadcrumb)"
+       ng-click="breadcrumbClickHandler( breadcrumb, $index )"
        ng-include="templates.breadcrumb"
-       ng-repeat="breadcrumb in breadcrumbs"
+       ng-repeat="breadcrumb in breadcrumbs track by ( opts.idProp ? breadcrumb[ opts.idProp ] : $index )"
        style="display: block;">
     </a>
 
@@ -17,9 +17,9 @@
         <a class="v-tree-leaf"
            href="javascript:;"
            ng-class="opts.classes.leaf"
-           ng-click="leafClickHandler(leaf)"
+           ng-click="leafClickHandler( leaf )"
            ng-include="templates.leaf"
-           ng-repeat="leaf in leaves">
+           ng-repeat="leaf in leaves track by ( opts.idProp ? leaf[ opts.idProp ] : $index )">
         </a>
         <p class="v-tree-empty" ng-if="!leaves || !leaves.length" ng-bind="opts.emptyMessage"></p>
     </div>

@@ -1,28 +1,29 @@
-var gulp = require( 'gulp' ),
-    gutil = require( 'gulp-util' ),
-    notify = require( 'gulp-notify' ),
-    plumber = require( 'gulp-plumber' ),
-    concat = require( 'gulp-concat' ),
-    cache = require( 'gulp-cache' ),
-    karma = require( 'karma' ).server,
-    jshint = require( 'gulp-jshint' ),
-    jshintStylish = require( 'jshint-stylish' ),
-    livereload = require( 'gulp-livereload' ),
-    uglify = require( 'gulp-uglify' ),
-    rename = require( 'gulp-rename' ),
-    templateCache = require( 'gulp-angular-templatecache' ),
-    ngAnnotate = require( 'gulp-ng-annotate' ),
-    runSequence = require( 'run-sequence' ),
-    fs = require( 'fs' ),
-    shell = require( 'shelljs' ),
-    config = require( './build.config.js' );
+const babel = require( 'gulp-babel' );
+const gulp = require( 'gulp' );
+const gutil = require( 'gulp-util' );
+const notify = require( 'gulp-notify' );
+const plumber = require( 'gulp-plumber' );
+const concat = require( 'gulp-concat' );
+const cache = require( 'gulp-cache' );
+const karma = require( 'karma' ).server;
+const jshint = require( 'gulp-jshint' );
+const jshintStylish = require( 'jshint-stylish' );
+const livereload = require( 'gulp-livereload' );
+const uglify = require( 'gulp-uglify' );
+const rename = require( 'gulp-rename' );
+const templateCache = require( 'gulp-angular-templatecache' );
+const ngAnnotate = require( 'gulp-ng-annotate' );
+const runSequence = require( 'run-sequence' );
+const fs = require( 'fs' );
+const shell = require( 'shelljs' );
+const config = require( './build.config.js' );
 
-var handleError = function (err) {
+function handleError(err) {
     gutil.log(err);
     gutil.beep();
     notify().write(err);
     this.emit('end');
-};
+}
 
 /* Hinting */
 
@@ -33,7 +34,7 @@ function makeHashKey( file ) {
 }
 
 gulp.task( 'hint', function () {
-    var toHint = config.srcFiles
+    const toHint = config.srcFiles
         .concat( config.testFiles )
         .concat( 'gulpfile.js' );
     return gulp.src( toHint )
@@ -83,6 +84,10 @@ gulp.task( 'compile-template', function() {
 gulp.task( 'compile-js', function() {
     return gulp.src( config.srcFiles )
         .pipe( plumber( { errorHandler: handleError } ) )
+        .pipe( babel( {
+            presets : [ 'env' ],
+            plugins : [ 'transform-object-assign' ]
+        } ) )
         .pipe( ngAnnotate() )
         .pipe( concat( config.jsFilename ) )
         .pipe( gulp.dest( config.buildDir ) );

@@ -7,7 +7,7 @@ module.exports = function ( karma ) {
         /**
          * This is the list of file patterns to load into the browser during testing.
          */
-        files: config.depFiles.concat( config.srcFiles ).concat( config.testFiles ),
+        files: config.depFiles.concat( config.buildFiles ).concat( config.testFiles ),
         frameworks: [ 'jasmine' ],
         plugins: [
             'karma-jasmine',

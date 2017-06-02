@@ -6,16 +6,16 @@ describe( 'Vertical Tree Directive:', function () {
 
 describe( 'Vertical Tree Controller:', function () {
 
-    var $rootScope,
-        $scope,
-        $timeout,
-        $controller,
-        items,
-        selectSpy,
-        selectCallbackSpy,
-        openSpy,
-        openCallbackSpy,
-        updateBranchHeightSpy;
+    var $rootScope;
+    var $scope;
+    var $timeout;
+    var $controller;
+    var items;
+    var selectSpy;
+    var selectCallbackSpy;
+    var openSpy;
+    var openCallbackSpy;
+    var updateBranchHeightSpy;
 
     function generateTree( level, items ) {
         var leaves = [];
@@ -26,6 +26,7 @@ describe( 'Vertical Tree Controller:', function () {
                     children = generateTree( level - 1, items );
                 }
                 leaves.push( {
+                    id : 'id-' + level + '-' + i,
                     label : level + '-' + i,
                     children : children
                 } );
@@ -47,6 +48,7 @@ describe( 'Vertical Tree Controller:', function () {
 
         $scope.items = items;
         $scope.treeOpts = {
+            idProp : 'id',
             root : {
                 label : 'New Root'
             },
@@ -70,6 +72,8 @@ describe( 'Vertical Tree Controller:', function () {
         $scope.select = selectCallbackSpy;
 
         $scope.updateBranchHeight = updateBranchHeightSpy;
+
+        $scope.$digest();
     } );
 
     it( 'should set the container class', function () {
@@ -166,7 +170,7 @@ describe( 'Vertical Tree Controller:', function () {
         describe( 'then skipping back up', function () {
 
             beforeEach( function () {
-                $scope.breadcrumbClickHandler( breadcrumbs[ 1 ] );
+                $scope.breadcrumbClickHandler( breadcrumbs[ 1 ], 2 );
                 $scope.$digest();
             } );
 
@@ -178,6 +182,7 @@ describe( 'Vertical Tree Controller:', function () {
 
             it( 'should set the correct items', function () {
                 expect( $scope.leaves ).toEqual( breadcrumbs[ 1 ].children );
+                expect( $scope.leaves.length ).toEqual( 6 );
             } );
 
             it( 'should fire onOpen', function () {
@@ -186,6 +191,50 @@ describe( 'Vertical Tree Controller:', function () {
                 expect( openCallbackSpy ).toHaveBeenCalledWith( { folder : items[ 2 ] } );
             } );
 
+        } );
+
+        describe( 'and the items are updated', function() {
+            describe( 'with an identical tree but new array', function() {
+                var newItems;
+
+                beforeEach( function() {
+                    newItems = angular.copy( items );
+                    $scope.items = newItems;
+                    $scope.$digest();
+                } );
+
+                it( 'should keep the same path', function() {
+                    expect( $scope.breadcrumbs.length ).toEqual( 5 );
+                    expect( $scope.breadcrumbs[ 1 ].id ).toEqual( breadcrumbs[ 0 ].id );
+                    expect( $scope.breadcrumbs[ 2 ].id ).toEqual( breadcrumbs[ 1 ].id );
+                    expect( $scope.breadcrumbs[ 3 ].id ).toEqual( breadcrumbs[ 2 ].id );
+                    expect( $scope.breadcrumbs[ 4 ].id ).toEqual( breadcrumbs[ 3 ].id );
+                } );
+
+                it( 'should have the updated objects', function() {
+                    expect( $scope.breadcrumbs[ 1 ] ).not.toBe( breadcrumbs[ 0 ] );
+                    expect( $scope.breadcrumbs[ 2 ] ).not.toBe( breadcrumbs[ 1 ] );
+                    expect( $scope.breadcrumbs[ 3 ] ).not.toBe( breadcrumbs[ 2 ] );
+                    expect( $scope.breadcrumbs[ 4 ] ).not.toBe( breadcrumbs[ 3 ] );
+                } );
+            } );
+
+            describe( 'only for the current branch', function() {
+                var removedItem;
+
+                beforeEach( function() {
+                    removedItem = $scope.breadcrumbs[ 4 ].children.splice( 2, 1 )[ 0 ];
+                    $scope.$digest();
+                } );
+
+                it( 'should update the leaves', function() {
+                    expect( $scope.leaves.length ).toEqual( 5 );
+                } );
+
+                it( 'should no longer have the remove item', function() {
+                    expect( $scope.leaves.indexOf( removedItem ) ).toEqual( -1 );
+                } );
+            } );
         } );
 
     } );

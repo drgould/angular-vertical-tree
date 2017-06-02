@@ -28,6 +28,12 @@
         </vertical-tree-leaf>
     </vertical-tree>
 
+    <button ng-click="copyItems()">Copy and replace tree</button><br/>
+    <button ng-click="generateNewTree()">Generate new tree</button><br/>
+    <button ng-click="removeItemFromCurrentFolder()">Remove an item from the open folder</button><br/>
+    <button ng-click="addItemToCurrentFolder()">Add an item to the open folder</button><br/>
+    <button ng-click="changeLabelsOfItems()">Change labels of items in the open folder</button><br/>
+
     <div>
         Last opened folder:
         <span ng-show="folder.label" ng-bind="folder.label"></span>

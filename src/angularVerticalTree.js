@@ -1,8 +1,4 @@
-( function() {
-
-const angular = window.angular || require( 'angular' );
-
-const vTree = angular.module( 'drg.angularVerticalTree', [] )
+angular.module( 'drg.angularVerticalTree', [] )
 
 .directive( 'verticalTree', function(
     $compile,
@@ -58,7 +54,7 @@ const vTree = angular.module( 'drg.angularVerticalTree', [] )
                         $timeout( function() {
                             const container = elem.children().eq( 0 );
                             const breadcrumbs = container.find( '.v-tree-breadcrumb' );
-                            const breadcrumbsOuterHeight = breadcrumbs.reduce( ( height, breadcrumb ) => height + $( breadcrumb ).outerHeight(), 0 );
+                            const breadcrumbsOuterHeight = breadcrumbs.toArray().reduce( ( height, breadcrumb ) => height + $( breadcrumb ).outerHeight(), 0 );
 
                             container.find( '.v-tree-branch' ).css( 'height', 'calc(100% - ' + breadcrumbsOuterHeight + 'px)' );
                         } );
@@ -147,7 +143,7 @@ const vTree = angular.module( 'drg.angularVerticalTree', [] )
 
     function getCurrentPath() {
         if( opts.idProp ) {
-            return $scope.breadcrumbs.map( breadcrumb => breadcrumb[ opts.idProp ] );
+            return $scope.breadcrumbs.slice( 1 ).map( breadcrumb => breadcrumb[ opts.idProp ] );
         }
         return [];
     }
@@ -163,8 +159,8 @@ const vTree = angular.module( 'drg.angularVerticalTree', [] )
                 const children = folder[ opts.children ];
                 for( let j = 0; j < children.length; j++ ) {
                     const child = children[ j ];
-                    if( child[ opts.idProp ] === id ) {
-                        $scope.breadcrumbs.push( child );
+                    if( child[ opts.idProp ] === id && opts.isFolder( child ) ) {
+                        onOpen( child );
                         folder = child;
                         found = true;
                         break;
@@ -204,7 +200,7 @@ const vTree = angular.module( 'drg.angularVerticalTree', [] )
         $scope.$emit( 'verticalTree.openFolder', folder );
 
         if( $scope.open ) {
-            $scope.open( { folder : folder } );
+            $scope.open( { folder } );
         }
     }
 
@@ -212,14 +208,8 @@ const vTree = angular.module( 'drg.angularVerticalTree', [] )
         $scope.$emit( 'verticalTree.selectItem', item );
 
         if( $scope.select ) {
-            $scope.select( { item : item } );
+            $scope.select( { item } );
         }
     }
 
 } );
-
-if( module ) {
-    module.exports = vTree.name;
-}
-
-} )();

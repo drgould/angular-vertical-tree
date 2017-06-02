@@ -7,6 +7,7 @@ var buildDir = 'build/',
     templateJsFilename = 'angularVerticalTree.tpl.js';
 
 module.exports = {
+    moduleName : 'drg.angularVerticalTree',
     srcFiles : [
         srcDir + jsFilename
     ],

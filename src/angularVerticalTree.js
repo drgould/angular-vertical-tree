@@ -85,6 +85,8 @@ angular.module( 'drg.angularVerticalTree', [] )
     const opts = $scope.opts = deepExtend( {
         root : 'Root',
         idProp : undefined,
+        trackByProp : undefined,
+        trackByIndex : false,
         label : 'label',
         children : 'children',
         classes : {

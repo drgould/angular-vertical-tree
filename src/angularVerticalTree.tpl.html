@@ -7,7 +7,7 @@
        ng-class="opts.classes.breadcrumb"
        ng-click="breadcrumbClickHandler( breadcrumb, $index )"
        ng-include="templates.breadcrumb"
-       ng-repeat="breadcrumb in breadcrumbs track by ( opts.idProp ? breadcrumb[ opts.idProp ] : $index )"
+       ng-repeat="breadcrumb in breadcrumbs track by ( !opts.trackByIndex && ( opts.trackByProp || opts.idProp ) ? breadcrumb[ opts.trackByProp || opts.idProp ] : $index )"
        style="display: block;">
     </a>
 
@@ -19,7 +19,7 @@
            ng-class="opts.classes.leaf"
            ng-click="leafClickHandler( leaf )"
            ng-include="templates.leaf"
-           ng-repeat="leaf in leaves track by ( opts.idProp ? leaf[ opts.idProp ] : $index )">
+           ng-repeat="leaf in leaves track by ( !opts.trackByIndex && ( opts.trackByProp || opts.idProp ) ? leaf[ opts.trackByProp || opts.idProp ] : $index )">
         </a>
         <p class="v-tree-empty" ng-if="!leaves || !leaves.length" ng-bind="opts.emptyMessage"></p>
     </div>

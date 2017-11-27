@@ -95,6 +95,7 @@ angular.module('drg.angularVerticalTree', []).directive('verticalTree', ["$compi
             leaf: 'list-group-item'
         },
         emptyMessage: '',
+        treeId: undefined,
         isLeaf: function isLeaf() {
             return true;
         },
@@ -140,7 +141,11 @@ angular.module('drg.angularVerticalTree', []).directive('verticalTree', ["$compi
     });
 
     $scope.$on('vTree.setPath', function (ev, path) {
-        return setPath(path);
+        var treeId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : opts.treeId;
+
+        if (treeId === opts.treeId) {
+            setPath(path);
+        }
     });
 
     function getCurrentPath() {
